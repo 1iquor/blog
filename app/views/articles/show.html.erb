@@ -1,0 +1,42 @@
+<h1><%= @article.title %></h1>
+
+<p><%= @article.body %></p>
+<% if user_signed_in? %>
+<ul>
+  <li><%= link_to "Edit", edit_article_path(@article) %></li>
+   <li><%= link_to "Destroy", article_path(@article), data: {
+                    turbo_method: :delete,
+                    turbo_confirm: "Are you sure?"
+                  } %></li>
+</ul>
+<h2>Comments</h2>
+<% @article.comments.each do |comment| %>
+  <p>
+    <strong>Commenter:</strong>
+    <%= comment.commenter %>
+  </p>
+
+  <p>
+    <strong>Comment:</strong>
+    <%= comment.body %>
+  </p>
+<% end %>
+<h2>Add a comment:</h2>
+<%= form_with model: [ @article, @article.comments.build ] do |form| %>
+  <p>
+    <%= form.label :commenter %><br>
+    <%= form.text_field :commenter %>
+  </p>
+  <p>
+    <%= form.label :body %><br>
+    <%= form.text_area :body %>
+  </p>
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>
+<% else %>
+  <!-- Контент для неавторизованного пользователя -->
+  <%= link_to 'Вход', new_user_session_path %>
+  <%= link_to 'Регистрация', new_user_registration_path %>
+<% end %>
